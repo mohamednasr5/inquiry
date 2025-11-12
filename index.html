@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ماسح الرقم القومي المصري</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -275,6 +276,9 @@
             color: white;
             font-size: 16px;
             transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
         .form-group input:focus {
@@ -284,10 +288,14 @@
             background: #1e293b;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        .recognition-info {
+            background: #064e3b;
+            border: 1px solid #10b981;
+            color: #86efac;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
         }
 
         .button-row {
@@ -399,6 +407,19 @@
             padding: 8px 0;
         }
 
+        .captured-image {
+            width: 100%;
+            max-width: 300px;
+            margin: 16px auto;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: none;
+        }
+
+        .captured-image.show {
+            display: block;
+        }
+
         /* استجابية */
         @media (max-width: 600px) {
             h1 {
@@ -411,10 +432,6 @@
 
             .preview-section {
                 padding: 20px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
             }
 
             .button-row {
@@ -522,27 +539,17 @@
         <!-- مرحلة المعاينة -->
         <div id="previewStage" class="stage">
             <div class="preview-section">
-                <h2>تحقق من البيانات</h2>
+                <h2>بيانات الرقم القومي</h2>
                 
-                <div class="form-group">
-                    <label>الرقم القومي</label>
-                    <input type="text" id="nationalID" dir="ltr" style="text-align: center; font-size: 18px; font-weight: bold;">
+                <div class="recognition-info">
+                    ✓ تم التعرف على الرقم القومي من البطاقة بنجاح
                 </div>
 
-                <div class="form-group">
-                    <label>الاسم</label>
-                    <input type="text" id="nameInput" style="text-align: right;">
-                </div>
+                <img id="capturedImage" class="captured-image" alt="صورة البطاقة">
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>تاريخ الميلاد</label>
-                        <input type="text" id="birthDateInput" style="text-align: center;">
-                    </div>
-                    <div class="form-group">
-                        <label>المحافظة</label>
-                        <input type="text" id="governorateInput" style="text-align: right;">
-                    </div>
+                <div class="form-group">
+                    <label>الرقم القومي (14 رقم)</label>
+                    <input type="text" id="nationalID" dir="ltr" readonly maxlength="14" placeholder="00000000000000">
                 </div>
 
                 <div id="previewError"></div>
@@ -573,7 +580,7 @@
                     </svg>
                 </div>
 
-                <h2>تم بنجاح!</h2>
+                <h2>تم الإرسال بنجاح!</h2>
                 
                 <div id="successMessage" class="success-message"></div>
 
@@ -615,6 +622,7 @@
         const videoElement = document.getElementById('videoElement');
         const canvas = document.getElementById('canvas');
         const fileInput = document.getElementById('fileInput');
+        let capturedImageData = null;
 
         // بدء الكاميرا
         async function startCamera() {
@@ -639,12 +647,14 @@
             canvas.height = videoElement.videoHeight;
             ctx.drawImage(videoElement, 0, 0);
             
+            capturedImageData = canvas.toDataURL('image/jpeg');
+            
             document.getElementById('captureText').innerHTML = '<span class="spinner">⏳</span> جاري التحليل...';
             document.querySelectorAll('#cameraStage button')[0].disabled = true;
             
             setTimeout(() => {
                 recognizeIDCard();
-            }, 800);
+            }, 500);
         }
 
         // رفع من الملف
@@ -661,33 +671,53 @@
                     canvas.height = img.height;
                     ctx.drawImage(img, 0, 0);
                     
+                    capturedImageData = canvas.toDataURL('image/jpeg');
+                    
                     document.getElementById('captureText').innerHTML = '<span class="spinner">⏳</span> جاري التحليل...';
                     document.querySelectorAll('#cameraStage button')[0].disabled = true;
                     
                     setTimeout(() => {
                         recognizeIDCard();
-                    }, 800);
+                    }, 500);
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        // التعرف على البطاقة
-        function recognizeIDCard() {
-            const mockData = {
-                nationalID: '29801011234567',
-                name: 'أحمد محمد علي',
-                birthDate: '01/08/1998',
-                governorate: 'القاهرة'
-            };
+        // التعرف على الرقم القومي باستخدام OCR
+        async function recognizeIDCard() {
+            try {
+                const { data: { text } } = await Tesseract.recognize(capturedImageData, 'ara+eng', { logger: m => console.log(m) });
+                
+                // استخراج الأرقام من النص
+                const numbers = text.replace(/\D/g, '');
+                
+                // البحث عن 14 رقم متتالي
+                let foundID = '';
+                for (let i = 0; i <= numbers.length - 14; i++) {
+                    const potentialID = numbers.substring(i, i + 14);
+                    if (potentialID.length === 14 && /^\d{14}$/.test(potentialID)) {
+                        foundID = potentialID;
+                        break;
+                    }
+                }
 
-            document.getElementById('nationalID').value = mockData.nationalID;
-            document.getElementById('nameInput').value = mockData.name;
-            document.getElementById('birthDateInput').value = mockData.birthDate;
-            document.getElementById('governorateInput').value = mockData.governorate;
+                if (foundID) {
+                    document.getElementById('nationalID').value = foundID;
+                    document.getElementById('capturedImage').src = capturedImageData;
+                    document.getElementById('capturedImage').classList.add('show');
+                    switchStage('preview');
+                } else {
+                    showPreviewError('لم نتمكن من قراءة الرقم القومي. حاول مرة أخرى بصورة أوضح.');
+                    switchStage('preview');
+                    document.getElementById('nationalID').value = 'لم يتم التعرف';
+                }
+            } catch (error) {
+                console.error('OCR Error:', error);
+                showPreviewError('حدث خطأ في قراءة الصورة. تأكد من وضوح البطاقة.');
+            }
 
-            switchStage('preview');
             document.getElementById('captureText').innerHTML = '📷 التقط صورة البطاقة';
             document.querySelectorAll('#cameraStage button')[0].disabled = false;
         }
@@ -695,8 +725,9 @@
         // إرسال SMS
         async function sendSMS() {
             const nationalID = document.getElementById('nationalID').value;
-            if (!nationalID) {
-                showPreviewError('يرجى التقاط صورة البطاقة أولاً');
+            
+            if (!nationalID || nationalID.length !== 14 || !/^\d{14}$/.test(nationalID)) {
+                showPreviewError('الرقم القومي غير صحيح. يجب أن يكون 14 رقم.');
                 return;
             }
 
@@ -709,10 +740,11 @@
             sendIcon.classList.add('spinner');
 
             try {
+                // محاكاة إرسال SMS
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 
                 document.getElementById('successMessage').textContent = 
-                    `✓ تم إرسال الرقم القومي ${nationalID} إلى 5151 بنجاح`;
+                    `✓ تم إرسال الرقم القومي: ${nationalID}\nإلى 5151 بنجاح`;
                 
                 switchStage('result');
             } catch (error) {
@@ -727,11 +759,9 @@
         // إعادة التصوير
         function retake() {
             document.getElementById('nationalID').value = '';
-            document.getElementById('nameInput').value = '';
-            document.getElementById('birthDateInput').value = '';
-            document.getElementById('governorateInput').value = '';
             document.getElementById('previewError').innerHTML = '';
             document.getElementById('errorContainer').innerHTML = '';
+            document.getElementById('capturedImage').classList.remove('show');
             
             switchStage('camera');
             
