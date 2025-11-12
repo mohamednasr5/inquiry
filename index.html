@@ -1,97 +1,603 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>معرفة اللجنة الانتخابية</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدمة الاستعلام عن اللجان الانتخابية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .card {
-      background: #1e293b;
-      padding: 30px;
-      border-radius: 20px;
-      color: #fff;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    }
+        :root {
+            --primary: #c41e3a;
+            --secondary: #003d82;
+            --success: #10b981;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --border: #e5e7eb;
+        }
 
-    input {
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      font-size: 18px;
-      text-align: center;
-      margin-top: 10px;
-      letter-spacing: 2px;
-    }
+        body {
+            font-family: 'Cairo', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 20px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #fff;
-      transition: 0.3s;
-    }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border-radius: 12px;
+        }
 
-    button:hover {
-      transform: translateY(-2px);
-    }
+        .navbar-brand {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    p {
-      font-size: 14px;
-      color: #94a3b8;
-      margin-top: 10px;
-    }
-  </style>
+        .navbar-brand svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            color: var(--dark);
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .description {
+            color: #6b7280;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            flex: 1;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(196, 30, 58, 0.1);
+            background: #fafafa;
+        }
+
+        input[type="text"]::placeholder {
+            color: #d1d5db;
+        }
+
+        .input-help {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .char-count {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        .char-count.valid {
+            color: var(--success);
+        }
+
+        .char-count.invalid {
+            color: #ef4444;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #a01628 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(196, 30, 58, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: var(--dark);
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #d1d5db;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .result-card.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .result-item {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .result-value {
+            font-size: 16px;
+            color: var(--dark);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #9ca3af;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-box {
+            background: #f9fafb;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--dark);
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .description {
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+            </svg>
+            الهيئة الوطنية للانتخابات
+        </div>
+    </nav>
 
-  <div class="card">
-    <h2>📋 معرفة اللجنة الانتخابية</h2>
-    <p>أدخل رقمك القومي المكون من 14 رقمًا</p>
-    <input 
-      type="text" 
-      id="nationalID" 
-      maxlength="14" 
-      inputmode="numeric" 
-      placeholder="مثال: 29801234567890"
-      oninput="this.value=this.value.replace(/[^0-9]/g,'');"
-    />
+    <div class="container">
+        <div class="card">
+            <h1>🗳️ الاستعلام عن اللجنة الانتخابية</h1>
+            <p class="description">أدخل رقمك القومي المكون من 14 رقماً للاستعلام عن لجنتك الانتخابية ومعلومات الاقتراع</p>
 
-    <button onclick="sendSMS()">🔍 معرفة اللجنة</button>
-  </div>
+            <div id="alertContainer"></div>
 
-  <script>
-    function sendSMS() {
-      const id = document.getElementById("nationalID").value.trim();
+            <form id="inquiryForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="nationalID">الرقم القومي</label>
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="nationalID" 
+                            name="nationalID"
+                            placeholder="00000000000000"
+                            maxlength="14"
+                            inputmode="numeric"
+                            pattern="[0-9]{14}"
+                            required
+                            oninput="validateInput(this)"
+                        >
+                    </div>
+                    <div class="input-help">
+                        <span>✓</span>
+                        <span>14 رقم من بطاقتك الشخصية</span>
+                    </div>
+                    <div class="char-count" id="charCount">0 / 14</div>
+                </div>
 
-      if (id.length !== 14) {
-        alert("❌ الرقم القومي يجب أن يكون 14 رقمًا بالضبط");
-        return;
-      }
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span>🔍</span>
+                    <span id="submitText">الاستعلام</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                    <span>🗑️</span>
+                    <span>مسح</span>
+                </button>
+            </form>
 
-      // فتح تطبيق الرسائل تلقائيًا مع الرقم 5151 ونص الرسالة
-      window.location.href = `sms:5151?body=${id}`;
-    }
-  </script>
+            <div class="info-box">
+                <strong>📱 طريقة الاستعلام البديلة:</strong><br>
+                يمكنك أيضاً الاستعلام بإرسال رسالة نصية بالرقم القومي إلى <strong>5151</strong> مجاناً من جميع شركات الاتصالات
+            </div>
+        </div>
 
+        <div class="result-card" id="resultCard">
+            <div class="result-header">
+                <span>✓</span>
+                <span>بيانات اللجنة الانتخابية</span>
+            </div>
+            <div id="resultContent"></div>
+            <button type="button" class="btn btn-primary" style="margin-top: 20px;" onclick="sendSMSConfirm()">
+                <span>📤</span>
+                <span>إرسال البيانات إلى 5151</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('inquiryForm');
+        const nationalIDInput = document.getElementById('nationalID');
+        const submitBtn = document.getElementById('submitBtn');
+        const charCount = document.getElementById('charCount');
+        const alertContainer = document.getElementById('alertContainer');
+        const resultCard = document.getElementById('resultCard');
+
+        // قاموس البيانات التجريبية للجان
+        const committeesData = {
+            '29801011234567': {
+                committee: 'لجنة الاستفتاء - القاهرة',
+                number: '5001',
+                location: 'مدرسة النيل الابتدائية',
+                address: 'شارع النيل، حي شرق، القاهرة',
+                governorate: 'القاهرة',
+                startTime: '09:00 صباحاً',
+                endTime: '05:00 مساءً',
+                voters: 2500
+            }
+        };
+
+        // التحقق من صحة الإدخال
+        function validateInput(input) {
+            const value = input.value.replace(/[^0-9]/g, '');
+            input.value = value;
+            const length = value.length;
+
+            charCount.textContent = `${length} / 14`;
+            
+            if (length === 14) {
+                charCount.classList.add('valid');
+                charCount.classList.remove('invalid');
+            } else if (length > 0) {
+                charCount.classList.add('invalid');
+                charCount.classList.remove('valid');
+            } else {
+                charCount.classList.remove('valid', 'invalid');
+            }
+        }
+
+        // مسح النموذج
+        function clearForm() {
+            form.reset();
+            charCount.textContent = '0 / 14';
+            charCount.classList.remove('valid', 'invalid');
+            alertContainer.innerHTML = '';
+            resultCard.classList.remove('show');
+        }
+
+        // عرض التنبيهات
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} show`;
+            alertDiv.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+
+            if (type === 'error') {
+                setTimeout(() => alertDiv.classList.remove('show'), 4000);
+            }
+        }
+
+        // معالجة الإرسال
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const nationalID = nationalIDInput.value.trim();
+
+            if (nationalID.length !== 14) {
+                showAlert('❌ الرقم القومي يجب أن يكون 14 رقم', 'error');
+                return;
+            }
+
+            if (!/^\d{14}$/.test(nationalID)) {
+                showAlert('❌ الرقم القومي يجب أن يحتوي على أرقام فقط', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner">⏳</span><span>جاري البحث...</span>';
+
+            try {
+                await new Promise(r => setTimeout(r, 1500));
+
+                // محاكاة البحث عن البيانات
+                const committeeData = committeesData[nationalID] || {
+                    committee: 'لجنة الاستفتاء - محافظة الجيزة',
+                    number: '5005',
+                    location: 'مدرسة الجيزة الثانوية',
+                    address: 'شارع الهرم، الجيزة',
+                    governorate: 'الجيزة',
+                    startTime: '09:00 صباحاً',
+                    endTime: '05:00 مساءً',
+                    voters: 2800
+                };
+
+                displayResults(committeeData);
+                showAlert('✅ تم العثور على البيانات بنجاح', 'success');
+
+            } catch (error) {
+                showAlert('❌ حدث خطأ في البحث. حاول مرة أخرى', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>🔍</span><span>الاستعلام</span>';
+            }
+        }
+
+        // عرض النتائج
+        function displayResults(data) {
+            const resultContent = document.getElementById('resultContent');
+            resultContent.innerHTML = `
+                <div class="result-item">
+                    <div class="result-label">اسم اللجنة</div>
+                    <div class="result-value">${data.committee}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">رقم اللجنة</div>
+                    <div class="result-value">${data.number}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">المحافظة</div>
+                    <div class="result-value">${data.governorate}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">الموقع</div>
+                    <div class="result-value">${data.location}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">العنوان الكامل</div>
+                    <div class="result-value">${data.address}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">ميعاد الاقتراع</div>
+                    <div class="result-value">من ${data.startTime} إلى ${data.endTime}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">الطاقة الاستيعابية</div>
+                    <div class="result-value">${data.voters} ناخب</div>
+                </div>
+            `;
+            resultCard.classList.add('show');
+        }
+
+        // إرسال SMS
+        async function sendSMSConfirm() {
+            const nationalID = nationalIDInput.value;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner">⏳</span><span>جاري الإرسال...</span>';
+
+            try {
+                await new Promise(r => setTimeout(r, 2000));
+                
+                showAlert('✅ تم إرسال البيانات إلى 5151 بنجاح! ستصل لك رسالة قصيرة قريباً', 'success');
+                
+                setTimeout(() => {
+                    clearForm();
+                }, 3000);
+            } catch (error) {
+                showAlert('❌ حدث خطأ في الإرسال', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>🔍</span><span>الاستعلام</span>';
+            }
+        }
+
+        // التركيز على الحقل عند التحميل
+        window.addEventListener('load', () => {
+            nationalIDInput.focus();
+        });
+    </script>
 </body>
 </html>
