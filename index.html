@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدمة الاستعلام عن اللجان الانتخابية</title>
+    <meta name="description" content="الموقع الرسمي للهيئة الوطنية للانتخابات - الاستعلام عن اللجان الانتخابية">
+    <title>الهيئة الوطنية للانتخابات - استعلم عن موقفك الانتخابي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -16,68 +18,130 @@
             --primary: #c41e3a;
             --secondary: #003d82;
             --success: #10b981;
-            --light: #f3f4f6;
+            --light: #f9fafb;
             --dark: #1f2937;
             --border: #e5e7eb;
+        }
+
+        html, body {
+            height: 100%;
         }
 
         body {
             font-family: 'Cairo', 'Arial', sans-serif;
             background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .navbar {
+        /* Header */
+        header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .navbar-brand {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
             gap: 12px;
         }
 
-        .navbar-brand svg {
-            width: 32px;
-            height: 32px;
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .page-header p {
+            font-size: 16px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Card Styles */
         .card {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin-bottom: 24px;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             border: 1px solid var(--border);
-        }
-
-        h1 {
-            color: var(--dark);
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .description {
-            color: #6b7280;
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 32px;
-            line-height: 1.6;
+            margin-bottom: 24px;
         }
 
         .form-group {
@@ -92,7 +156,7 @@
             margin-bottom: 10px;
         }
 
-        .input-group {
+        .input-wrapper {
             display: flex;
             gap: 12px;
         }
@@ -100,11 +164,11 @@
         input[type="text"],
         input[type="number"] {
             flex: 1;
-            padding: 14px;
+            padding: 14px 16px;
             font-size: 18px;
             border: 2px solid var(--border);
-            border-radius: 10px;
-            font-weight: bold;
+            border-radius: 8px;
+            font-weight: 700;
             letter-spacing: 1px;
             text-align: center;
             font-family: 'Courier New', monospace;
@@ -116,10 +180,9 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(196, 30, 58, 0.1);
-            background: #fafafa;
         }
 
-        input[type="text"]::placeholder {
+        input::placeholder {
             color: #d1d5db;
         }
 
@@ -143,23 +206,25 @@
             color: var(--success);
         }
 
-        .char-count.invalid {
-            color: #ef4444;
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 12px;
         }
 
-        .btn {
+        button {
             padding: 14px 28px;
             font-size: 16px;
             font-weight: 700;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            width: 100%;
+            flex: 1;
         }
 
         .btn-primary {
@@ -176,20 +241,18 @@
         .btn-secondary {
             background: #e5e7eb;
             color: var(--dark);
-            margin-top: 12px;
         }
 
         .btn-secondary:hover:not(:disabled) {
             background: #d1d5db;
         }
 
-        .btn:disabled {
+        button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
 
         .spinner {
-            display: inline-block;
             animation: spin 1s linear infinite;
         }
 
@@ -198,17 +261,17 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Alert Styles */
         .alert {
             padding: 16px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin-bottom: 24px;
-            font-size: 15px;
             display: none;
+            animation: slideDown 0.3s ease-out;
         }
 
         .alert.show {
             display: block;
-            animation: slideDown 0.3s ease-out;
         }
 
         @keyframes slideDown {
@@ -234,18 +297,12 @@
             border: 1px solid #fca5a5;
         }
 
-        .alert-info {
-            background: #dbeafe;
-            color: #1e40af;
-            border: 1px solid #93c5fd;
-        }
-
+        /* Result Card */
         .result-card {
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
             border: 2px solid var(--success);
             border-radius: 12px;
             padding: 24px;
-            margin-bottom: 24px;
             display: none;
         }
 
@@ -257,66 +314,37 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
-            font-size: 18px;
+            margin-bottom: 20px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--success);
         }
 
-        .result-item {
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
         }
 
-        .result-item:last-child {
-            border-bottom: none;
+        .result-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
         }
 
         .result-label {
-            font-size: 13px;
+            font-size: 12px;
             color: #6b7280;
             font-weight: 600;
             text-transform: uppercase;
+            margin-bottom: 6px;
         }
 
         .result-value {
             font-size: 16px;
             color: var(--dark);
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .tab-btn {
-            padding: 12px 20px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            color: #9ca3af;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
+            font-weight: 700;
         }
 
         .info-box {
@@ -330,102 +358,239 @@
             line-height: 1.6;
         }
 
-        .info-box strong {
-            color: var(--dark);
+        /* Footer */
+        footer {
+            background: #1f2937;
+            color: white;
+            padding: 40px 20px;
+            margin-top: auto;
         }
 
-        @media (max-width: 600px) {
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                justify-content: center;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
             .card {
                 padding: 20px;
             }
 
-            h1 {
-                font-size: 24px;
-            }
-
-            .input-group {
+            .input-wrapper {
                 flex-direction: column;
             }
 
-            .description {
-                font-size: 14px;
+            .button-group {
+                flex-direction: column;
             }
 
-            .btn {
-                padding: 12px;
-                font-size: 14px;
+            button {
+                flex: 1;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 16px;
+            }
+
+            .logo-text h1 {
+                font-size: 16px;
+            }
+
+            .social-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 16px;
+                margin-bottom: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <svg fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-            </svg>
-            الهيئة الوطنية للانتخابات
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">🗳️</div>
+                <div class="logo-text">
+                    <h1>الهيئة الوطنية</h1>
+                    <p>للانتخابات</p>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="#" title="واتس آب">💬</a>
+                <a href="#" title="فيسبوك">f</a>
+                <a href="#" title="تويتر">𝕏</a>
+                <a href="#" title="يوتيوب">▶</a>
+            </div>
         </div>
-    </nav>
+    </header>
 
-    <div class="container">
-        <div class="card">
-            <h1>🗳️ الاستعلام عن اللجنة الانتخابية</h1>
-            <p class="description">أدخل رقمك القومي المكون من 14 رقماً للاستعلام عن لجنتك الانتخابية ومعلومات الاقتراع</p>
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>استعلم عن موقفك الانتخابي</h1>
+                <p>أدخل رقمك القومي المكون من 14 رقماً للاستعلام عن لجنتك الانتخابية ومعلومات الاقتراع</p>
+            </div>
 
             <div id="alertContainer"></div>
 
-            <form id="inquiryForm" onsubmit="handleSubmit(event)">
-                <div class="form-group">
-                    <label for="nationalID">الرقم القومي</label>
-                    <div class="input-group">
-                        <input 
-                            type="text" 
-                            id="nationalID" 
-                            name="nationalID"
-                            placeholder="00000000000000"
-                            maxlength="14"
-                            inputmode="numeric"
-                            pattern="[0-9]{14}"
-                            required
-                            oninput="validateInput(this)"
-                        >
+            <div class="card">
+                <form id="inquiryForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="nationalID">الرقم القومي</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="nationalID" 
+                                placeholder="00000000000000"
+                                maxlength="14"
+                                inputmode="numeric"
+                                pattern="[0-9]{14}"
+                                required
+                                oninput="validateInput(this)"
+                            >
+                        </div>
+                        <div class="input-help">
+                            <span>✓</span>
+                            <span>14 رقم من بطاقتك الشخصية</span>
+                        </div>
+                        <div class="char-count" id="charCount">0 / 14</div>
                     </div>
-                    <div class="input-help">
-                        <span>✓</span>
-                        <span>14 رقم من بطاقتك الشخصية</span>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            <span>🔍</span>
+                            <span id="submitText">استعلم</span>
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="clearForm()">
+                            <span>🗑️</span>
+                            <span>مسح</span>
+                        </button>
                     </div>
-                    <div class="char-count" id="charCount">0 / 14</div>
+                </form>
+
+                <div class="info-box">
+                    <strong>📱 طريقة الاستعلام البديلة:</strong><br>
+                    يمكنك أيضاً الاستعلام بإرسال رسالة نصية برقمك القومي إلى <strong>5151</strong> مجاناً من جميع شركات الاتصالات
                 </div>
+            </div>
 
-                <button type="submit" class="btn btn-primary" id="submitBtn">
-                    <span>🔍</span>
-                    <span id="submitText">الاستعلام</span>
+            <div class="result-card" id="resultCard">
+                <div class="result-header">
+                    <span>✓</span>
+                    <span>بيانات اللجنة الانتخابية</span>
+                </div>
+                <div class="result-grid" id="resultContent"></div>
+                <button type="button" class="btn-primary" style="margin-top: 20px;" onclick="sendSMSConfirm()">
+                    <span>📤</span>
+                    <span>إرسال البيانات إلى 5151</span>
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="clearForm()">
-                    <span>🗑️</span>
-                    <span>مسح</span>
-                </button>
-            </form>
-
-            <div class="info-box">
-                <strong>📱 طريقة الاستعلام البديلة:</strong><br>
-                يمكنك أيضاً الاستعلام بإرسال رسالة نصية بالرقم القومي إلى <strong>5151</strong> مجاناً من جميع شركات الاتصالات
             </div>
         </div>
+    </main>
 
-        <div class="result-card" id="resultCard">
-            <div class="result-header">
-                <span>✓</span>
-                <span>بيانات اللجنة الانتخابية</span>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>عن الهيئة</h3>
+                <ul>
+                    <li><a href="#">تعريف بالهيئة</a></li>
+                    <li><a href="#">المسؤولين</a></li>
+                    <li><a href="#">الجهاز التنفيذي</a></li>
+                </ul>
             </div>
-            <div id="resultContent"></div>
-            <button type="button" class="btn btn-primary" style="margin-top: 20px;" onclick="sendSMSConfirm()">
-                <span>📤</span>
-                <span>إرسال البيانات إلى 5151</span>
-            </button>
+            <div class="footer-section">
+                <h3>الانتخابات</h3>
+                <ul>
+                    <li><a href="#">مجلس النواب</a></li>
+                    <li><a href="#">مجلس الشيوخ</a></li>
+                    <li><a href="#">الانتخابات الرئاسية</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>تواصل معنا</h3>
+                <div class="contact-info">
+                    <span>📧</span>
+                    <span>Elections@nea.gov.eg</span>
+                </div>
+                <div class="contact-info">
+                    <span>📞</span>
+                    <span>00227933136</span>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="footer-bottom">
+            جميع حقوق الطبع محفوظة &copy; 2025 الهيئة الوطنية للانتخابات
+        </div>
+    </footer>
 
     <script>
         const form = document.getElementById('inquiryForm');
@@ -435,7 +600,7 @@
         const alertContainer = document.getElementById('alertContainer');
         const resultCard = document.getElementById('resultCard');
 
-        // قاموس البيانات التجريبية للجان
+        // بيانات تجريبية
         const committeesData = {
             '29801011234567': {
                 committee: 'لجنة الاستفتاء - القاهرة',
@@ -444,98 +609,67 @@
                 address: 'شارع النيل، حي شرق، القاهرة',
                 governorate: 'القاهرة',
                 startTime: '09:00 صباحاً',
-                endTime: '05:00 مساءً',
-                voters: 2500
+                endTime: '05:00 مساءً'
             }
         };
 
-        // التحقق من صحة الإدخال
         function validateInput(input) {
             const value = input.value.replace(/[^0-9]/g, '');
             input.value = value;
             const length = value.length;
 
             charCount.textContent = `${length} / 14`;
-            
-            if (length === 14) {
-                charCount.classList.add('valid');
-                charCount.classList.remove('invalid');
-            } else if (length > 0) {
-                charCount.classList.add('invalid');
-                charCount.classList.remove('valid');
-            } else {
-                charCount.classList.remove('valid', 'invalid');
-            }
+            charCount.classList.toggle('valid', length === 14);
         }
 
-        // مسح النموذج
         function clearForm() {
             form.reset();
             charCount.textContent = '0 / 14';
-            charCount.classList.remove('valid', 'invalid');
+            charCount.classList.remove('valid');
             alertContainer.innerHTML = '';
             resultCard.classList.remove('show');
         }
 
-        // عرض التنبيهات
         function showAlert(message, type = 'info') {
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type} show`;
-            alertDiv.textContent = message;
+            alertDiv.innerHTML = `<strong>${message}</strong>`;
             alertContainer.innerHTML = '';
             alertContainer.appendChild(alertDiv);
-
-            if (type === 'error') {
-                setTimeout(() => alertDiv.classList.remove('show'), 4000);
-            }
         }
 
-        // معالجة الإرسال
         async function handleSubmit(event) {
             event.preventDefault();
 
             const nationalID = nationalIDInput.value.trim();
 
-            if (nationalID.length !== 14) {
+            if (nationalID.length !== 14 || !/^\d{14}$/.test(nationalID)) {
                 showAlert('❌ الرقم القومي يجب أن يكون 14 رقم', 'error');
-                return;
-            }
-
-            if (!/^\d{14}$/.test(nationalID)) {
-                showAlert('❌ الرقم القومي يجب أن يحتوي على أرقام فقط', 'error');
                 return;
             }
 
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner">⏳</span><span>جاري البحث...</span>';
 
-            try {
-                await new Promise(r => setTimeout(r, 1500));
+            await new Promise(r => setTimeout(r, 1500));
 
-                // محاكاة البحث عن البيانات
-                const committeeData = committeesData[nationalID] || {
-                    committee: 'لجنة الاستفتاء - محافظة الجيزة',
-                    number: '5005',
-                    location: 'مدرسة الجيزة الثانوية',
-                    address: 'شارع الهرم، الجيزة',
-                    governorate: 'الجيزة',
-                    startTime: '09:00 صباحاً',
-                    endTime: '05:00 مساءً',
-                    voters: 2800
-                };
+            const committeeData = committeesData[nationalID] || {
+                committee: 'لجنة الاستفتاء - محافظة الجيزة',
+                number: '5005',
+                location: 'مدرسة الجيزة الثانوية',
+                address: 'شارع الهرم، الجيزة',
+                governorate: 'الجيزة',
+                startTime: '09:00 صباحاً',
+                endTime: '05:00 مساءً'
+            };
 
-                displayResults(committeeData);
-                showAlert('✅ تم العثور على البيانات بنجاح', 'success');
+            displayResults(committeeData);
+            showAlert('✅ تم العثور على البيانات بنجاح', 'success');
 
-            } catch (error) {
-                showAlert('❌ حدث خطأ في البحث. حاول مرة أخرى', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>🔍</span><span>الاستعلام</span>';
-            }
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>🔍</span><span>استعلم</span>';
         }
 
-        // عرض النتائج
         function displayResults(data) {
             const resultContent = document.getElementById('resultContent');
             resultContent.innerHTML = `
@@ -556,48 +690,34 @@
                     <div class="result-value">${data.location}</div>
                 </div>
                 <div class="result-item">
-                    <div class="result-label">العنوان الكامل</div>
+                    <div class="result-label">العنوان</div>
                     <div class="result-value">${data.address}</div>
                 </div>
                 <div class="result-item">
                     <div class="result-label">ميعاد الاقتراع</div>
-                    <div class="result-value">من ${data.startTime} إلى ${data.endTime}</div>
-                </div>
-                <div class="result-item">
-                    <div class="result-label">الطاقة الاستيعابية</div>
-                    <div class="result-value">${data.voters} ناخب</div>
+                    <div class="result-value">${data.startTime} - ${data.endTime}</div>
                 </div>
             `;
             resultCard.classList.add('show');
         }
 
-        // إرسال SMS
         async function sendSMSConfirm() {
             const nationalID = nationalIDInput.value;
+            const originalText = submitBtn.innerHTML;
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner">⏳</span><span>جاري الإرسال...</span>';
 
-            try {
-                await new Promise(r => setTimeout(r, 2000));
-                
-                showAlert('✅ تم إرسال البيانات إلى 5151 بنجاح! ستصل لك رسالة قصيرة قريباً', 'success');
-                
-                setTimeout(() => {
-                    clearForm();
-                }, 3000);
-            } catch (error) {
-                showAlert('❌ حدث خطأ في الإرسال', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>🔍</span><span>الاستعلام</span>';
-            }
+            await new Promise(r => setTimeout(r, 2000));
+            
+            showAlert('✅ تم إرسال البيانات إلى 5151 بنجاح! ستصل لك رسالة قصيرة قريباً', 'success');
+            
+            setTimeout(() => clearForm(), 3000);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
         }
 
-        // التركيز على الحقل عند التحميل
-        window.addEventListener('load', () => {
-            nationalIDInput.focus();
-        });
+        nationalIDInput.focus();
     </script>
 </body>
 </html>
