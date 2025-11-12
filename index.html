@@ -1,558 +1,97 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معرفة اللجنة الانتخابية</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>معرفة اللجنة الانتخابية</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+    .card {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 20px;
+      color: #fff;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-        }
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 18px;
+      text-align: center;
+      margin-top: 10px;
+      letter-spacing: 2px;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      transition: 0.3s;
+    }
 
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #06b6d4, #2563eb);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4);
-        }
+    button:hover {
+      transform: translateY(-2px);
+    }
 
-        .logo svg {
-            width: 40px;
-            height: 40px;
-            color: white;
-        }
-
-        h1 {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 12px;
-        }
-
-        .subtitle {
-            font-size: 16px;
-            color: #cbd5e1;
-            margin-bottom: 8px;
-        }
-
-        .description {
-            font-size: 14px;
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-
-        .card {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 40px;
-            border: 1px solid #334155;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            margin-bottom: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 16px;
-            font-weight: 600;
-            color: #e2e8f0;
-            margin-bottom: 12px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 16px;
-            background: #334155;
-            border: 2px solid #475569;
-            border-radius: 12px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #06b6d4;
-            background: #1e293b;
-            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.1);
-        }
-
-        .form-group input::placeholder {
-            color: #64748b;
-        }
-
-        .info-text {
-            background: #0f172a;
-            border-left: 4px solid #06b6d4;
-            padding: 12px;
-            border-radius: 8px;
-            color: #cbd5e1;
-            font-size: 14px;
-            margin-top: 8px;
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        button {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-primary:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .btn-clear {
-            background: #475569;
-            color: white;
-        }
-
-        .btn-clear:hover:not(:disabled) {
-            background: #64748b;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .spinner {
-            display: inline-block;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .success-message {
-            background: linear-gradient(135deg, #064e3b 0%, #0d5e3e 100%);
-            border: 2px solid #10b981;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideIn 0.4s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .success-icon {
-            width: 60px;
-            height: 60px;
-            background: #10b981;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-        }
-
-        .success-icon svg {
-            width: 32px;
-            height: 32px;
-            color: white;
-        }
-
-        .success-text {
-            text-align: center;
-            color: #86efac;
-            font-size: 16px;
-            font-weight: 600;
-            line-height: 1.6;
-        }
-
-        .error-message {
-            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
-            border: 2px solid #f87171;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 24px;
-            display: none;
-            color: #fecaca;
-            font-size: 14px;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 32px;
-        }
-
-        .footer-text {
-            color: #64748b;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .footer-text strong {
-            color: #cbd5e1;
-        }
-
-        .features {
-            background: #0f172a;
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 24px;
-            border: 1px solid #334155;
-        }
-
-        .features h3 {
-            color: #06b6d4;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .features ul {
-            list-style: none;
-        }
-
-        .features li {
-            color: #cbd5e1;
-            font-size: 13px;
-            padding: 6px 0;
-            padding-right: 8px;
-        }
-
-        .features li:before {
-            content: "✓ ";
-            color: #10b981;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-
-        .char-count {
-            text-align: right;
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 6px;
-        }
-
-        .char-count.valid {
-            color: #10b981;
-        }
-
-        .char-count.invalid {
-            color: #f87171;
-        }
-
-        @media (max-width: 600px) {
-            .card {
-                padding: 24px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .subtitle {
-                font-size: 14px;
-            }
-
-            button {
-                padding: 14px;
-                font-size: 15px;
-            }
-
-            .form-group input {
-                padding: 14px;
-                font-size: 16px;
-            }
-        }
-
-        @media (max-width: 400px) {
-            body {
-                padding: 12px;
-            }
-
-            .card {
-                padding: 20px;
-                border-radius: 16px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .logo {
-                width: 64px;
-                height: 64px;
-            }
-
-            .form-group {
-                margin-bottom: 16px;
-            }
-        }
-    </style>
+    p {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-            </div>
-            <h1>معرفة اللجنة</h1>
-            <p class="subtitle">الانتخابات المصرية</p>
-            <p class="description">أدخل رقمك القومي واعرف معلومات لجنتك الانتخابية مباشرة</p>
-        </div>
 
-        <div id="errorContainer"></div>
-        <div id="successContainer"></div>
+  <div class="card">
+    <h2>📋 معرفة اللجنة الانتخابية</h2>
+    <p>أدخل رقمك القومي المكون من 14 رقمًا</p>
+    <input 
+      type="text" 
+      id="nationalID" 
+      maxlength="14" 
+      inputmode="numeric" 
+      placeholder="مثال: 29801234567890"
+      oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+    />
 
-        <div class="card">
-            <form id="idForm" onsubmit="handleSubmit(event)">
-                <div class="form-group">
-                    <label for="nationalID">الرقم القومي</label>
-                    <input 
-                        type="text" 
-                        id="nationalID" 
-                        placeholder="أدخل الـ 14 رقم"
-                        maxlength="14"
-                        inputmode="numeric"
-                        pattern="\d{14}"
-                        required
-                        oninput="validateInput(this)"
-                    >
-                    <div class="char-count" id="charCount">0 / 14</div>
-                    <div class="info-text">
-                        أدخل الـ 14 رقم الخاصة برقمك القومي المصري
-                    </div>
-                </div>
+    <button onclick="sendSMS()">🔍 معرفة اللجنة</button>
+  </div>
 
-                <div class="button-group">
-                    <button type="submit" class="btn-primary" id="submitBtn">
-                        <span id="submitText">🔍 معرفة اللجنة</span>
-                    </button>
-                    <button type="button" class="btn-clear" onclick="clearForm()">
-                        🗑️ مسح
-                    </button>
-                </div>
-            </form>
-        </div>
+  <script>
+    function sendSMS() {
+      const id = document.getElementById("nationalID").value.trim();
 
-        <div class="features">
-            <h3>ℹ️ معلومات الخدمة</h3>
-            <ul>
-                <li>خدمة مجانية تماماً</li>
-                <li>من جميع شركات الاتصالات</li>
-                <li>لا توجد رسوم أو اشتراكات</li>
-                <li>آمنة وسرية تماماً</li>
-            </ul>
-        </div>
+      if (id.length !== 14) {
+        alert("❌ الرقم القومي يجب أن يكون 14 رقمًا بالضبط");
+        return;
+      }
 
-        <div class="footer">
-            <p class="footer-text">
-                <strong>سيتم إرسال معلومات اللجنة إلى هاتفك برسالة نصية قصيرة</strong><br>
-                رقم اللجنة • العنوان • الموقع • ميعاد الاقتراع
-            </p>
-        </div>
-    </div>
+      // فتح تطبيق الرسائل تلقائيًا مع الرقم 5151 ونص الرسالة
+      window.location.href = `sms:5151?body=${id}`;
+    }
+  </script>
 
-    <script>
-        const form = document.getElementById('idForm');
-        const nationalIDInput = document.getElementById('nationalID');
-        const submitBtn = document.getElementById('submitBtn');
-        const charCount = document.getElementById('charCount');
-
-        // التحقق من صحة الإدخال
-        function validateInput(input) {
-            const value = input.value;
-            const length = value.length;
-
-            // تحديث العداد
-            charCount.textContent = `${length} / 14`;
-            
-            if (length === 14) {
-                charCount.classList.remove('invalid');
-                charCount.classList.add('valid');
-            } else if (length > 0) {
-                charCount.classList.add('invalid');
-                charCount.classList.remove('valid');
-            } else {
-                charCount.classList.remove('valid', 'invalid');
-            }
-
-            // السماح فقط بالأرقام
-            input.value = value.replace(/[^0-9]/g, '');
-        }
-
-        // مسح النموذج
-        function clearForm() {
-            form.reset();
-            charCount.textContent = '0 / 14';
-            charCount.classList.remove('valid', 'invalid');
-            document.getElementById('errorContainer').innerHTML = '';
-            document.getElementById('successContainer').innerHTML = '';
-        }
-
-        // معالجة الإرسال
-        async function handleSubmit(event) {
-            event.preventDefault();
-
-            const nationalID = nationalIDInput.value.trim();
-
-            // التحقق من صحة الرقم
-            if (nationalID.length !== 14) {
-                showError('❌ الرقم القومي يجب أن يكون 14 رقم');
-                return;
-            }
-
-            if (!/^\d{14}$/.test(nationalID)) {
-                showError('❌ الرقم القومي يجب أن يحتوي على أرقام فقط');
-                return;
-            }
-
-            // تعطيل الزر
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner">⏳</span> جاري الإرسال...';
-
-            try {
-                // محاكاة إرسال SMS
-                await sendSMS(nationalID);
-                
-                showSuccess();
-                clearForm();
-            } catch (error) {
-                showError('❌ حدث خطأ في الإرسال. حاول مرة أخرى');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '🔍 معرفة اللجنة';
-            }
-        }
-
-        // إرسال SMS
-        async function sendSMS(nationalID) {
-            // هنا يتم إرسال الرقم القومي إلى 5151
-            // في التطبيق الفعلي، ستتصل بـ API حقيقي لإرسال SMS
-
-            // محاكاة تأخير الإرسال
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    console.log(`تم إرسال الرقم القومي: ${nationalID} إلى 5151`);
-                    resolve();
-                }, 2000);
-            });
-        }
-
-        // عرض رسالة النجاح
-        function showSuccess() {
-            const container = document.getElementById('successContainer');
-            container.innerHTML = `
-                <div class="success-message show">
-                    <div class="success-icon">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="success-text">
-                        ✅ تم الإرسال بنجاح!<br><br>
-                        سيصل إليك قريباً برسالة نصية قصيرة SMS تتضمن:<br>
-                        • رقم اللجنة الانتخابية<br>
-                        • عنوان اللجنة<br>
-                        • موقع اللجنة<br>
-                        • ميعاد الاقتراع
-                    </div>
-                </div>
-            `;
-        }
-
-        // عرض رسالة الخطأ
-        function showError(message) {
-            const container = document.getElementById('errorContainer');
-            container.innerHTML = `<div class="error-message show">${message}</div>`;
-            
-            // إخفاء الرسالة بعد 4 ثوان
-            setTimeout(() => {
-                container.innerHTML = '';
-            }, 4000);
-        }
-
-        // التركيز على الحقل عند التحميل
-        window.addEventListener('load', () => {
-            nationalIDInput.focus();
-        });
-    </script>
 </body>
 </html>
