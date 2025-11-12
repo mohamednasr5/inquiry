@@ -1,0 +1,363 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { Camera, CheckCircle, AlertCircle, Send, Loader } from 'lucide-react';
+
+export default function IDScanner() {
+  const [stage, setStage] = useState('camera'); // camera, preview, result
+  const [nationalID, setNationalID] = useState('');
+  const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [governorate, setGovernorate] = useState('');
+  const [extractedData, setExtractedData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [sending, setSending] = useState(false);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (stage === 'camera') {
+      startCamera();
+    }
+    return () => {
+      if (videoRef.current?.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stage]);
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      setError('لم نتمكن من الوصول إلى الكاميرا. يرجى منح الأذونات.');
+    }
+  };
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
+      canvasRef.current.width = videoRef.current.videoWidth;
+      canvasRef.current.height = videoRef.current.videoHeight;
+      ctx.drawImage(videoRef.current, 0, 0);
+      
+      setLoading(true);
+      setTimeout(() => {
+        recognizeIDCard();
+      }, 500);
+    }
+  };
+
+  const recognizeIDCard = () => {
+    // محاكاة التعرف على البطاقة باستخدام OCR
+    const canvas = canvasRef.current;
+    const imageData = canvas.toDataURL('image/jpeg');
+    
+    // بيانات توضيحية - في التطبيق الفعلي تستخدم مكتبة OCR حقيقية
+    const mockData = {
+      nationalID: '29801011234567',
+      name: 'أحمد محمد علي',
+      birthDate: '01/08/1998',
+      governorate: 'القاهرة'
+    };
+
+    // محاكاة البحث عن الرقم القومي
+    if (imageData) {
+      setExtractedData(mockData);
+      setNationalID(mockData.nationalID);
+      setName(mockData.name);
+      setBirthDate(mockData.birthDate);
+      setGovernorate(mockData.governorate);
+      setStage('preview');
+    }
+    setLoading(false);
+  };
+
+  const uploadFromFile = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = canvasRef.current;
+          if (canvas) {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            setLoading(true);
+            setTimeout(() => {
+              recognizeIDCard();
+            }, 500);
+          }
+        };
+        img.src = event.target?.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const sendSMS = async () => {
+    if (!nationalID) {
+      setError('يرجى التقاط صورة البطاقة أولاً');
+      return;
+    }
+
+    setSending(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      // محاكاة إرسال الرسالة
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      setSuccess(`✓ تم إرسال الرقم القومي ${nationalID} إلى 5151 بنجاح`);
+      setStage('result');
+    } catch (err) {
+      setError('حدث خطأ في إرسال الرسالة. حاول مرة أخرى.');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const retake = () => {
+    setNationalID('');
+    setName('');
+    setBirthDate('');
+    setGovernorate('');
+    setExtractedData(null);
+    setError('');
+    setSuccess('');
+    setStage('camera');
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-4" dir="rtl">
+      <div className="max-w-2xl mx-auto">
+        
+        {/* الرأس */}
+        <div className="text-center mb-8 pt-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full flex items-center justify-center">
+              <Camera className="text-white" size={32} />
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold text-white mb-2">ماسح الرقم القومي</h1>
+          <p className="text-slate-300">صور بطاقة الرقم القومي واستعلم عن اللجنة الانتخابية</p>
+        </div>
+
+        {/* مرحلة الكاميرا */}
+        {stage === 'camera' && (
+          <div className="bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-700">
+            <div className="aspect-video bg-black relative overflow-hidden">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover"
+              />
+              <canvas ref={canvasRef} className="hidden" />
+              
+              {/* شبكة التصوير */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute inset-0 border-2 border-cyan-400 opacity-30"></div>
+                <div className="absolute top-1/3 left-0 right-0 h-px bg-cyan-400 opacity-20"></div>
+                <div className="absolute top-2/3 left-0 right-0 h-px bg-cyan-400 opacity-20"></div>
+              </div>
+            </div>
+
+            {error && (
+              <div className="p-4 bg-red-900 text-red-100 flex items-center gap-2">
+                <AlertCircle size={20} />
+                {error}
+              </div>
+            )}
+
+            <div className="p-6 bg-slate-700 flex flex-col gap-3">
+              <button
+                onClick={capturePhoto}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 text-white font-bold py-4 rounded-lg transition flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <Loader size={24} className="animate-spin" />
+                    جاري التحليل...
+                  </>
+                ) : (
+                  <>
+                    <Camera size={24} />
+                    التقط صورة البطاقة
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full bg-slate-600 hover:bg-slate-500 text-white font-bold py-3 rounded-lg transition"
+              >
+                أو اختر صورة من الجهاز
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={uploadFromFile}
+                className="hidden"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* مرحلة المعاينة والتصحيح */}
+        {stage === 'preview' && extractedData && (
+          <div className="bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-700">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">تحقق من البيانات</h2>
+
+            <div className="space-y-4 mb-8">
+              <div>
+                <label className="block text-sm text-slate-300 font-semibold mb-2">الرقم القومي</label>
+                <input
+                  type="text"
+                  value={nationalID}
+                  onChange={(e) => setNationalID(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-cyan-500 focus:outline-none text-lg font-bold text-center"
+                  dir="ltr"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-slate-300 font-semibold mb-2">الاسم</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-cyan-500 focus:outline-none text-right"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-slate-300 font-semibold mb-2">تاريخ الميلاد</label>
+                  <input
+                    type="text"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-cyan-500 focus:outline-none text-center"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-slate-300 font-semibold mb-2">المحافظة</label>
+                  <input
+                    type="text"
+                    value={governorate}
+                    onChange={(e) => setGovernorate(e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-cyan-500 focus:outline-none text-right"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {error && (
+              <div className="p-4 bg-red-900 text-red-100 rounded-lg flex items-center gap-2 mb-4">
+                <AlertCircle size={20} />
+                {error}
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={sendSMS}
+                disabled={sending || !nationalID}
+                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 text-white font-bold py-4 rounded-lg transition flex items-center justify-center gap-2"
+              >
+                {sending ? (
+                  <>
+                    <Loader size={24} className="animate-spin" />
+                    جاري الإرسال...
+                  </>
+                ) : (
+                  <>
+                    <Send size={24} />
+                    إرسال إلى 5151
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={retake}
+                className="flex-1 bg-slate-600 hover:bg-slate-500 text-white font-bold py-4 rounded-lg transition"
+              >
+                إعادة التصوير
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* مرحلة النتيجة */}
+        {stage === 'result' && (
+          <div className="bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-700 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center">
+                <CheckCircle className="text-white" size={48} />
+              </div>
+            </div>
+
+            <h2 className="text-3xl font-bold text-white mb-4">تم بنجاح!</h2>
+            
+            {success && (
+              <div className="p-4 bg-green-900 text-green-100 rounded-lg mb-6 text-lg font-semibold">
+                {success}
+              </div>
+            )}
+
+            <div className="bg-slate-700 p-6 rounded-lg mb-8 text-right">
+              <p className="text-slate-300 mb-2">سيتم استقبال رسالة نصية على رقمك تحتوي على:</p>
+              <ul className="text-white text-lg space-y-2 mt-4">
+                <li>✓ رقم اللجنة الانتخابية الخاصة بك</li>
+                <li>✓ عنوان اللجنة بالتفصيل</li>
+                <li>✓ ميعاد الاقتراع</li>
+                <li>✓ معلومات التواصل</li>
+              </ul>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-slate-400 text-sm">
+                💡 الخدمة مجانية تماماً من جميع شركات الاتصالات المصرية
+              </p>
+
+              <button
+                onClick={retake}
+                className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-4 rounded-lg transition"
+              >
+                الاستعلام عن بطاقة أخرى
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* معلومات مهمة */}
+        <div className="mt-8 p-6 bg-slate-700 rounded-xl border border-slate-600">
+          <h3 className="text-white font-bold mb-3 flex items-center gap-2">
+            <span className="text-cyan-400">ℹ️</span> معلومات مهمة
+          </h3>
+          <ul className="text-slate-300 space-y-2 text-sm">
+            <li>• تأكد من وضوح البطاقة قبل التصوير</li>
+            <li>• الخدمة مجانية تماماً ولا تتطلب أي رسوم</li>
+            <li>• ستصل المعلومات برسالة نصية قصيرة إلى هاتفك</li>
+            <li>• البيانات آمنة وسرية تماماً</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
